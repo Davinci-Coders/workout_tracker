@@ -24,8 +24,11 @@
       <li><a href="{% url 'home' %}">Home</a></li>
       {% if user.is_authenticated %}
         <li><a href="{% url 'new_workout' %}">New Workout</a></li>
+        <li><a href="{% url 'exercise' %}">Exercises</a></li>
+        <HR>
         <li><a href="{% url 'account_settings' %}">Account Settings</a></li>
         <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+        <HR>
       {% else %}
         <li><a href="{% url 'account_login' %}">Sign In</a></li>
         <li><a href="{% url 'account_signup' %}">Sign Up</a></li>

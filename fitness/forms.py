@@ -1,13 +1,18 @@
 from django import forms
 
-from fitness.models import (Exercise, Workout, ResistanceScheme, ResistanceSet,
+from fitness.models import (Exercise, CardioExercise, Workout, ResistanceScheme, ResistanceSet,
                             CardioScheme, CardioDistance, CardioInterval, CardioRepetition)
 
 
 class ExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
-        fields = ('title', 'body_part', 'modality')
+        fields = ('title', 'body_part',)
+
+class CardioExerciseForm(forms.ModelForm):
+    class Meta:
+        model = CardioExercise
+        fields = ('title',)
 
 
 class WorkoutForm(forms.ModelForm):
@@ -20,7 +25,7 @@ class ResistanceSchemeForm(forms.ModelForm):
     class Meta:
         model = ResistanceScheme
         fields = (
-            'workout', 'exercise', 'variation', 'rep_style',
+            'workout', 'exercise', 'modality', 'variation', 'rep_style',
             'notes'
         )
 
@@ -37,7 +42,7 @@ class CardioSchemeForm(forms.ModelForm):
     class Meta:
         model = CardioScheme
         fields = (
-            'workout', 'exercise', 'notes'
+            'workout', 'exercise', 'modality', 'notes'
         )
 
 
@@ -54,7 +59,7 @@ class CardioIntervalForm(forms.ModelForm):
         model = CardioInterval
         fields = (
             'scheme', 'action_start', 'action_stop', 'rest_start',
-            'rest_stop'
+            'rest_stop', 'quantity',
         )
 
 

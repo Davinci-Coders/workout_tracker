@@ -37,12 +37,20 @@ MODALITY_CHOICES = (
     ('body-weight', 'Body Weight'),
 )
 
+CARDIO_MODALITY_CHOICES = (
+
+)
+
 
 class Exercise(models.Model):
     title = models.CharField(max_length=200)
     body_part = models.CharField(max_length=50, choices=BODY_PART_CHOICES)
-    modality = models.CharField(max_length=50, help_text='Method of exercise',
-                                choices=MODALITY_CHOICES)
+   
+    def __str__(self):
+        return self.title
+
+class CardioExercise(models.Model):
+    title = models.CharField(max_length=200)
 
     def __str__(self):
         return self.title
@@ -74,6 +82,8 @@ class ResistanceScheme(models.Model):
     variation = models.CharField(max_length=100, blank=True, null=True)
     notes = models.TextField(null=True, blank=True)
     rep_style = models.CharField(max_length=20, blank=True, null=True, choices=REP_STYLE_CHOICES)
+    modality = models.CharField(max_length=50, blank=True, null=True, help_text='Method of exercise',
+                                choices=MODALITY_CHOICES)
 
     def __str__(self):
         return '{} - {}'.format(datetime.strftime(self.workout.date, '%m-%d-%Y'),
@@ -101,10 +111,19 @@ class ResistanceSet(models.Model):
         if self.reps > 12:
             return 'Endurance'
 
+    def __str__(self):
+        return '{}@{}lbs'.format(self.reps, self.load)
+
 
 class CardioScheme(WorkoutScheme):
     workout = models.ForeignKey(Workout, related_name='cardio_scheme')
-    exercise = models.ForeignKey(Exercise)  # TODO: update to point to CardioExercise
+    exercise = models.ForeignKey(CardioExercise)
+    modality = models.CharField(max_length=50, blank=True, null=True, help_text='Method of cardio',
+                                choices=CARDIO_MODALITY_CHOICES)
+
+    def __str__(self):
+        return '{} - {}'.format(datetime.strftime(self.workout.date, '%m-%d-%Y'),
+                                self.exercise)
 
 
 class CardioDistance(models.Model):
@@ -123,6 +142,9 @@ class CardioDistance(models.Model):
             return time_delta.seconds
         return 0
 
+    def __str__(self):
+        return '{} in {} seconds'.format(self.time_seconds, self.distance) # maybe needs to change
+
 
 # obj = CardioInterval.objects.first()
 # obj.action_time_seconds  # calling as a property
@@ -133,6 +155,7 @@ class CardioInterval(models.Model):
     action_stop = models.TimeField(blank=True, null=True)
     rest_start = models.TimeField(blank=True, null=True)
     rest_stop = models.TimeField(blank=True, null=True)
+    quantity = models.IntegerField(default=1)
 
     @property
     def action_time_seconds(self):
@@ -160,6 +183,9 @@ class CardioInterval(models.Model):
             # ipdb.set_trace()
         super(CardioInterval, self).save(force_insert, force_update, using, update_fields)
 
+    def __str__(self):
+        return 'action: {}, rest: {}, units: {}'.format(self.action_time_seconds, self, rest_time_seconds, self.quantity)
+
 
 class CardioRepetition(models.Model):
     scheme = models.ForeignKey(CardioScheme, related_name='repetition_set')
@@ -174,3 +200,6 @@ class CardioRepetition(models.Model):
                          datetime.combine(datetime.today(), self.start)
             return time_delta.seconds
         return 0
+
+    def __str__(self):
+        return '{} in {}'.format(self.quantity, self.time_seconds)

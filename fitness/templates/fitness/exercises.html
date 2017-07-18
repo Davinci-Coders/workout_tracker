@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block content %}
+  <h1>Exercises</h1>
+
+  <hr>
+  <div>
+  	<h3>Resistance Exercises</h3>
+  		{% for exercise in resistance_exercises  %}
+  		{{ exercise.title }}
+  		<br>
+  		{% endfor %}
+  		<hr>
+  	<h3>Cardio Exercises</h3>
+  		{% for exercise in cardio_exercises %}
+  		{{ exercise.title }}
+  		<br>
+  		{% endfor %}
+  		<hr>
+
+    <form method="POST">
+      {% csrf_token %}
+      <input type="submit" name="add_resistance_exercise" value="Add Resistance Exercise"/>
+      <br>
+      <input type="submit" name="add_cardio_exercise" value="Add Cardio Exercise"/>
+    </form>
+  </div>
+
+{% endblock content %}

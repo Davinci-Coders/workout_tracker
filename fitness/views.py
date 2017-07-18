@@ -7,8 +7,8 @@ from django.forms import formset_factory
 from django.shortcuts import redirect, render
 from django.views import View
 
-from fitness.forms import CardioDistanceForm, CardioRepetitionForm, CardioIntervalForm, CardioSchemeForm, ResistanceSetForm, ResistanceSchemeForm, WorkoutForm
-from fitness.models import CardioScheme, ResistanceScheme, Workout
+from fitness.forms import ExerciseForm, CardioExerciseForm, CardioDistanceForm, CardioRepetitionForm, CardioIntervalForm, CardioSchemeForm, ResistanceSetForm, ResistanceSchemeForm, WorkoutForm
+from fitness.models import CardioScheme, ResistanceScheme, Workout, Exercise, CardioExercise
 
 
 def account_settings(request):
@@ -24,10 +24,57 @@ def home(request):
         return redirect(reverse('account_login'))
 
     context = {
-        'workouts': Workout.objects.filter(user=request.user),
+        'workouts': Workout.objects.filter(user=request.user), # MIGHT NEED THIS FOR exercise()
     }
     return render(request, 'home.html', context)
 
+def exercise(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('acount_login'))
+    context = {
+        'resistance_exercises': Exercise.objects.all(),
+        'cardio_exercises': CardioExercise.objects.all(),
+    }
+    if request.POST.get('add_resistance_exercise'):
+        return redirect((reverse('resistance_exercise_form')))
+    if request.POST.get('add_cardio_exercise'):
+        return redirect((reverse('cardio_exercise_form')))
+    return render(request, 'fitness/exercises.html', context)
+
+# def add_exercise(request):
+#     if not request.user.is_authenticated:
+#         return redirect(reverse('acount_login'))
+#      if request.POST.get('add_resistance_exercise'):
+#         return redirect((reverse('resistance_exercise_form')))
+#     if request.POST.get('add_cardio_exercise'):
+#         return redirect((reverse('cardio_exercise_form')))
+
+def resistance_exercise_form(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('acount_login'))
+    form = ExerciseForm()
+    if request.method == 'POST':
+        form = ExerciseForm(request.POST)
+        if form.is_valid():
+            form.save()
+    context = {
+        'form':form,
+    }
+    return render(request, 'fitness/new_resistance_exercise.html', context)
+    
+
+def cardio_exercise_form(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('acount_login'))
+    form = CardioExerciseForm()
+    if request.method == 'POST':
+        form = CardioExerciseForm(request.POST)
+        if form.is_valid():
+            form.save()
+    context = {
+        'form':form,
+    }
+    return render(request, 'fitness/new_cardio_exercise.html', context)
 
 def single_workout(request, workout_id):
     if not request.user.is_authenticated:
