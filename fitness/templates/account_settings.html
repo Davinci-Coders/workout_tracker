@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{% block head_title %}{% endblock %} Workout Tracker</title>
+  <title>{% block head_title %}{% endblock %}Account Settings</title>
   {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -18,18 +18,18 @@
     </div>
   {% endif %}
 
+    <h3><a href="{% url 'home' %}">Home</a></h3>
+    <h4><a href="{% url 'account_logout' %}">Sign Out</a></h4>
+
   <div>
-    <strong>Menu:</strong>
+      <strong><h2>Account Settings</h2></strong>
     <ul>
-      <li><a href="{% url 'home' %}">Home</a></li>
       {% if user.is_authenticated %}
-        <li><a href="{% url 'new_workout' %}">New Workout</a></li>
-        <li><a href="{% url 'account_settings' %}">Account Settings</a></li>
-        <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+        <li><a href="{% url 'account_email' %}">Change E-mail</a></li>
+        <li><a href="{% url 'account_change_password' %}">Change Password</a></li>
       {% else %}
-        <li><a href="{% url 'account_login' %}">Sign In</a></li>
+          <li><a href="{% url 'account_login' %}">Sign In</a></li>
         <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
-        <li><a href="{% url 'account_reset_password' %}">Reset Password</a></li>
       {% endif %}
     </ul>
   </div>

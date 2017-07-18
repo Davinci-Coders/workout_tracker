@@ -11,6 +11,14 @@ from fitness.forms import CardioDistanceForm, CardioRepetitionForm, CardioInterv
 from fitness.models import CardioScheme, ResistanceScheme, Workout
 
 
+def account_settings(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('account_login'))
+    context = {
+    }
+    return render(request, 'account_settings.html', context)
+
+
 def home(request):
     if not request.user.is_authenticated:
         return redirect(reverse('account_login'))
