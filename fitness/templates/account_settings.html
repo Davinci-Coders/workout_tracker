@@ -2,16 +2,6 @@
 
 {% block content %}
 
-  {% if messages %}
-    <div>
-      <strong>Messages:</strong>
-      <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
     <strong><h2><p align="center">Account Settings</p></h2></strong>
     {% if user.is_authenticated %}
         <p align="center">Logged in as {{ user }}.</p>
