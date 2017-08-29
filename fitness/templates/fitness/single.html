@@ -2,28 +2,44 @@
 
 {% block content %}
 
-  <h1>Your workout on {{ workout.date }}</h1>
+  <h1>Workout on {{ workout.date }}</h1>
 
 
-  {% if workout.resistance_scheme.count %}<h2>Resistance</h2>{% endif %}
-  <ul>
+  {% if workout.resistance_scheme %}<h2>Resistance</h2>{% endif %}
+
+  
+
+          <br>
+      <table border="1">
+          <tr>
+            <th>EXERCISE</th>
+            <th>SCHEME</th>
+            <th>WORK</th>
+            <th>INTENSITY</th>
+          </tr>
     {% for resistance_scheme in workout.resistance_scheme.all %}
-      <li>
-        {{ resistance_scheme.exercise.title }}
-        <ul>
-          {% for resistance_set in resistance_scheme.resistance_set.all %}
-            <li>{{ resistance_set.reps }} Reps, {{ resistance_set.load }}lbs, {{ resistance_set.work }} work</li>
+    {% for resistance_set in resistance_scheme.resistance_set.all %}
+
+          <tr>
+          {% if forloop.first %}
+            <td>{{ resistance_scheme.exercise.title }} </td>
+          {% else %}
+            <td></td>
+          {% endif %}
+            <td>{{ resistance_set.reps }} X {{ resistance_set.load }} </td>
+            <td>{{ resistance_set.work }} </td>
+            <td>{{ resistance_set.intensity }} </td>
+          </tr>
+
           {% endfor %}
-        </ul>
-        {% if resistance_scheme.notes %}
-          <p>{{ resistance_scheme.notes }}</p>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
+          
+          {% endfor %}
+          </table>
+    
 
 
-  <h2>Cardio</h2>
+
+  {% if workout.cardio_scheme %}<h2>Cardio</h2>{% endif %}
   <ul>
     {% for cardio_scheme in workout.cardio_scheme.all %}
       <li>
@@ -54,4 +70,4 @@
   <br><br>
   <a href="{% url 'new_cardio_scheme' workout.id %}">Add Cardio Scheme</a>
 
-{% endblock %}
+{% endblock content %}
